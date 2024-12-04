@@ -90,7 +90,7 @@ export default function Home() {
       {devices.length > 0 && devices.map((device, index) => {
         return (
           <div key={index}>
-            {device.label} {device.deviceId}
+            {JSON.stringify(device)}
             </div>
         )
       })}
