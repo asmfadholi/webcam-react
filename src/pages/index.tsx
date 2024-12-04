@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 
 export default function Home() {
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const refVideo = useRef<HTMLVideoElement>(null);
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const handleOpenDevice = async () => {
@@ -16,6 +17,9 @@ export default function Home() {
       refVideo.current.srcObject = resUserMedia;
       refVideo.current.play();
     }
+
+    const allDevices = await navigator.mediaDevices.enumerateDevices();
+    setDevices(allDevices);
   }
 
   const handleCloseDevice = async () => {
@@ -83,6 +87,13 @@ export default function Home() {
           <button id="start-button" onClick={downloadPdf} style={{ background: 'aquamarine', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>Download</button>
         </>
       )}
+      {devices.length > 0 && devices.map((device, index) => {
+        return (
+          <div key={index}>
+            {device.label} {device.deviceId}
+            </div>
+        )
+      })}
     </div> 
   );
 }
