@@ -3,16 +3,16 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 
 export default function Home() {
-  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('environment');
   const [currentImage, setCurrentImage] = useState<string | null>(null);
   const refVideo = useRef<HTMLVideoElement>(null);
   const refCanvas = useRef<HTMLCanvasElement>(null);
-  const handleOpenDevice = async () => {
+  const handleOpenDevice = async (fMode = facingMode) => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
       alert("devices not supported");
       return false;
     }
-    const resUserMedia = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode } });
+    const resUserMedia = await navigator.mediaDevices.getUserMedia({ video: { facingMode: fMode } });
     if (refVideo.current) {
       refVideo.current.srcObject = resUserMedia;
       refVideo.current.play();
@@ -67,17 +67,19 @@ export default function Home() {
   }
 
   const handleFlipCamera = async () => {
-    setFacingMode(facingMode === 'user' ? 'environment' : 'user');
+    const newFMode = facingMode === 'user' ? 'environment' : 'user'
+    setFacingMode(newFMode);
     handleCloseDevice();
-    await handleOpenDevice();
+    await handleOpenDevice(newFMode);
   }
 
   return (
     <div>
-       <button onClick={handleOpenDevice} style={{ background: 'beige', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>Start Camera</button>
+       <button onClick={() => handleOpenDevice()} style={{ background: 'beige', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>Start Camera</button>
        <br />
        <button onClick={handleCloseDevice} style={{ background: 'pink', padding: '10px', borderRadius: '5px',  marginBottom: '10px' }}>Close</button>
-       <button onClick={handleFlipCamera} style={{ background: 'pink', padding: '10px', borderRadius: '5px',  marginBottom: '10px' }}>Flip Camera</button>
+       <br />
+       <button onClick={handleFlipCamera} style={{ background: 'burlywood', padding: '10px', borderRadius: '5px',  marginBottom: '10px' }}>Flip Camera</button>
        <div className="camera">
         <video id="video" ref={refVideo} style={{ height: '100vh', width: '100vw', position: 'fixed', top: 0, zIndex: -1 }}>Video stream not available.</video>
        </div>
