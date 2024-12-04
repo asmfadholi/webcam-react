@@ -3,8 +3,8 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 
 export default function Home() {
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
   const [currentImage, setCurrentImage] = useState<string | null>(null);
-  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const refVideo = useRef<HTMLVideoElement>(null);
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const handleOpenDevice = async () => {
@@ -12,14 +12,11 @@ export default function Home() {
       alert("devices not supported");
       return false;
     }
-    const resUserMedia = await navigator.mediaDevices.getUserMedia({ video: true });
+    const resUserMedia = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode } });
     if (refVideo.current) {
       refVideo.current.srcObject = resUserMedia;
       refVideo.current.play();
     }
-
-    const allDevices = await navigator.mediaDevices.enumerateDevices();
-    setDevices(allDevices);
   }
 
   const handleCloseDevice = async () => {
@@ -68,12 +65,19 @@ export default function Home() {
       doc.save('image.pdf');
   
   }
+
+  const handleFlipCamera = async () => {
+    setFacingMode(facingMode === 'user' ? 'environment' : 'user');
+    handleCloseDevice();
+    await handleOpenDevice();
+  }
+
   return (
     <div>
        <button onClick={handleOpenDevice} style={{ background: 'beige', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>Start Camera</button>
        <br />
        <button onClick={handleCloseDevice} style={{ background: 'pink', padding: '10px', borderRadius: '5px',  marginBottom: '10px' }}>Close</button>
-
+       <button onClick={handleFlipCamera} style={{ background: 'pink', padding: '10px', borderRadius: '5px',  marginBottom: '10px' }}>Flip Camera</button>
        <div className="camera">
         <video id="video" ref={refVideo} style={{ height: '100vh', width: '100vw', position: 'fixed', top: 0, zIndex: -1 }}>Video stream not available.</video>
        </div>
@@ -87,13 +91,7 @@ export default function Home() {
           <button id="start-button" onClick={downloadPdf} style={{ background: 'aquamarine', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>Download</button>
         </>
       )}
-      {devices.length > 0 && devices.map((device, index) => {
-        return (
-          <div key={index}>
-            {JSON.stringify(device)}
-            </div>
-        )
-      })}
+      
     </div> 
   );
 }
