@@ -5,14 +5,23 @@ import { useRef, useState } from "react";
 export default function Home() {
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('environment');
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [currentCapabilities, setCurrentCapabilities] = useState<MediaTrackCapabilities | null>(null);
   const refVideo = useRef<HTMLVideoElement>(null);
   const refCanvas = useRef<HTMLCanvasElement>(null);
+
+  const handleCheckResolution = () => {
+    alert(`Current max resolution: ${currentCapabilities?.width?.max}x${currentCapabilities?.height?.max}`);
+  }
+
   const handleOpenDevice = async (fMode = facingMode) => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
       alert("devices not supported");
       return false;
     }
     const resUserMedia = await navigator.mediaDevices.getUserMedia({ video: { facingMode: fMode } });
+    const videoTrack = resUserMedia.getVideoTracks()[0];
+    const capabilities = videoTrack.getCapabilities();
+    setCurrentCapabilities(capabilities);
     if (refVideo.current) {
       refVideo.current.srcObject = resUserMedia;
       refVideo.current.play();
@@ -93,6 +102,8 @@ export default function Home() {
           <button id="start-button" onClick={downloadPdf} style={{ background: 'aquamarine', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>Download</button>
         </>
       )}
+      < br />
+     {currentCapabilities && <button id="start-button" onClick={handleCheckResolution} style={{ background: 'aquamarine', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>Check Resolution</button>}
       
     </div> 
   );
