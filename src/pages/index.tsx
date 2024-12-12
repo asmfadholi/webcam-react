@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 
 export default function Home() {
+  const [isOpened, setIsOpened] = useState(false);
   const [facingMode, setFacingMode] = useState<"user" | "environment">(
     "environment"
   );
@@ -14,7 +15,7 @@ export default function Home() {
 
   const handleCheckResolution = () => {
     alert(
-      `Current max resolution: ${currentCapabilities?.width?.max}x${currentCapabilities?.height?.max}`
+      `your max resolution: ${currentCapabilities?.width?.max}x${currentCapabilities?.height?.max}`
     );
   };
 
@@ -35,7 +36,7 @@ export default function Home() {
     setCurrentCapabilities(capabilities);
     if (refVideo.current) {
       refVideo.current.srcObject = resUserMedia;
-      refVideo.current.play();
+      setIsOpened(true);
     }
   };
 
@@ -46,6 +47,8 @@ export default function Home() {
       track.stop();
     });
     refVideo.current.srcObject = null;
+    setIsOpened(false);
+    setCurrentCapabilities(null);
   };
 
   const takePicture = () => {
@@ -61,6 +64,7 @@ export default function Home() {
       const data = refCanvas.current.toDataURL("image/png");
       setCurrentImage(data);
     }
+    handleCloseDevice();
   };
 
   const downloadPdf = () => {
@@ -94,72 +98,155 @@ export default function Home() {
 
   return (
     <div>
-      <button
-        onClick={() => handleOpenDevice()}
-        style={{
-          background: "beige",
-          padding: "10px",
-          borderRadius: "5px",
-          marginBottom: "10px",
-        }}
-      >
-        Start Camera
-      </button>
+      {!isOpened && (
+        <button
+          onClick={() => handleOpenDevice()}
+          style={{
+            width: "100px",
+            height: "100px",
+            zIndex: 0,
+            background: "beige",
+            padding: "10px",
+            borderRadius: "5px",
+            marginBottom: "10px",
+            position: "fixed",
+            top: "0",
+            bottom: "0",
+            right: "0",
+            left: "0",
+            margin: "auto",
+          }}
+        >
+          Start Camera
+        </button>
+      )}
+
       <br />
-      <button
-        onClick={handleCloseDevice}
-        style={{
-          background: "pink",
-          padding: "10px",
-          borderRadius: "5px",
-          marginBottom: "10px",
-        }}
-      >
-        Close
-      </button>
+
       <br />
-      <button
-        onClick={handleFlipCamera}
-        style={{
-          background: "burlywood",
-          padding: "10px",
-          borderRadius: "5px",
-          marginBottom: "10px",
-        }}
-      >
-        Flip Camera
-      </button>
+
       <div className="camera">
         <video
           id="video"
           ref={refVideo}
+          autoPlay
           style={{
-            height: "100vh",
-            width: "100vw",
             position: "fixed",
             top: 0,
-            zIndex: -1,
+            zIndex: 0,
+            width: "100%",
+            height: "100vh",
+            pointerEvents: "none",
+            // @ts-expect-error: vendor prefix
+            "&::-webkit-media-controls": {
+              display:
+                "none !important" /* Webkit-based browsers (Chrome, Safari) */,
+            },
+
+            "&::-moz-media-controls": {
+              display: "none !important" /* Firefox */,
+            },
           }}
         >
           Video stream not available.
         </video>
+        {isOpened && (
+          <>
+            <button
+              id="start-button"
+              onClick={takePicture}
+              style={{
+                width: "60px",
+                height: "60px",
+                background: "#fff",
+                border: "2px solid #000",
+                padding: "10px",
+                borderRadius: "100px",
+                zIndex: 3,
+                transition: "150ms",
+                position: "fixed",
+                top: "0",
+                bottom: "0",
+                right: "0",
+                left: "0",
+                margin: "auto",
+                outline: "none",
+                cursor: "pointer",
+                marginBottom: "15px",
+              }}
+            ></button>
+
+            <button
+              onClick={handleFlipCamera}
+              style={{
+                background: "burlywood",
+                padding: "10px",
+                borderRadius: "5px",
+                zIndex: 3,
+                transition: "150ms",
+                position: "fixed",
+                top: "0",
+                bottom: "0",
+                right: "0",
+                left: "200px",
+                margin: "auto",
+                outline: "none",
+                cursor: "pointer",
+                marginBottom: "15px",
+                width: "60px",
+                height: "60px",
+                color: "white",
+              }}
+            >
+              Flip
+            </button>
+
+            <button
+              onClick={handleCloseDevice}
+              style={{
+                background: "pink",
+                padding: "10px",
+                borderRadius: "5px",
+                zIndex: 3,
+                transition: "150ms",
+                position: "fixed",
+                top: "0",
+                bottom: "0",
+                right: "200px",
+                left: "0",
+                margin: "auto",
+                outline: "none",
+                cursor: "pointer",
+                marginBottom: "15px",
+                width: "60px",
+                height: "60px",
+                color: "white",
+              }}
+            >
+              Close
+            </button>
+          </>
+        )}
       </div>
 
-      <button
-        id="start-button"
-        onClick={takePicture}
-        style={{
-          background: "aqua",
-          padding: "10px",
-          borderRadius: "5px",
-          marginBottom: "10px",
-        }}
-      >
-        Take photo
-      </button>
       <canvas ref={refCanvas} style={{ display: "none" }}></canvas>
-      {currentImage && (
-        <>
+      {currentImage && !isOpened && (
+        <div
+          style={{
+            transition: "150ms",
+            position: "fixed",
+            top: "320px",
+            bottom: "0",
+            right: "0",
+            left: "0",
+            margin: "auto",
+            outline: "none",
+            cursor: "pointer",
+            width: "100px",
+            height: "200px",
+            textAlign: "center",
+          }}
+        >
           <p>Result photo:</p>
           <Image
             src={currentImage}
@@ -180,7 +267,7 @@ export default function Home() {
           >
             Download
           </button>
-        </>
+        </div>
       )}
       <br />
       {currentCapabilities && (
@@ -189,9 +276,20 @@ export default function Home() {
           onClick={handleCheckResolution}
           style={{
             background: "aquamarine",
-            padding: "10px",
+            padding: "5px",
             borderRadius: "5px",
             marginBottom: "10px",
+            width: "200px",
+            height: "50px",
+            zIndex: 0,
+            position: "fixed",
+            top: "0",
+            bottom: "0",
+            right: "0",
+            left: "0",
+            margin: "auto",
+            marginTop: "15px",
+            color: "#000",
           }}
         >
           Check Resolution
