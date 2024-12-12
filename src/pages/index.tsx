@@ -107,16 +107,10 @@ export default function Home() {
     const resUserMedia = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: fMode,
-        width: {
-          ideal: currentResolution
-            ? pixelDetail[currentResolution].width
-            : 1840,
-        },
-        height: {
-          ideal: currentResolution
-            ? pixelDetail[currentResolution].height
-            : 3264,
-        },
+        width: currentResolution ? pixelDetail[currentResolution].width : 3264,
+        height: currentResolution
+          ? pixelDetail[currentResolution].height
+          : 1840,
       },
     });
     const videoTrack = resUserMedia.getVideoTracks()[0];
@@ -202,10 +196,12 @@ export default function Home() {
     await handleOpenDevice(newFMode);
   };
 
-  const handleChangeResolution = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChangeResolution = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setCurrentResolution((e.target.value as PixelString) || null);
     handleCloseDevice();
-    handleOpenDevice(facingMode);
+    await handleOpenDevice(facingMode);
   };
 
   return (
