@@ -130,6 +130,7 @@ export default function Home() {
           id="video"
           ref={refVideo}
           autoPlay
+          playsinline
           style={{
             position: "fixed",
             top: 0,
