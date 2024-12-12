@@ -31,28 +31,28 @@ const RESOLUTIONS = [
 
 const pixelDetail = {
   QVGA: {
-    width: 240,
-    height: 320,
+    height: 240,
+    width: 320,
   },
   VGA: {
-    width: 480,
-    height: 640,
+    height: 480,
+    width: 640,
   },
   HD: {
-    width: 720,
-    height: 1280,
+    height: 720,
+    width: 1280,
   },
   Full_HD: {
-    width: 1080,
-    height: 1920,
+    height: 1080,
+    width: 1920,
   },
   "2K": {
-    width: 1440,
-    height: 2560,
+    height: 1440,
+    width: 2560,
   },
   "4K": {
-    width: 2160,
-    height: 3840,
+    height: 2160,
+    width: 3840,
   },
 };
 
@@ -94,8 +94,12 @@ export default function Home() {
     const resUserMedia = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: fMode,
-        width: newResolution ? pixelDetail[newResolution].width : 720,
-        height: newResolution ? pixelDetail[newResolution].height : 1280,
+        width: newResolution
+          ? pixelDetail[newResolution].width
+          : pixelDetail.HD.width,
+        height: newResolution
+          ? pixelDetail[newResolution].height
+          : pixelDetail.HD.height,
       },
     });
     const videoTrack = resUserMedia.getVideoTracks()[0];
