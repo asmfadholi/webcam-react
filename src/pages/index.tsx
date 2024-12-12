@@ -107,10 +107,16 @@ export default function Home() {
     const resUserMedia = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: fMode,
-        width: currentResolution ? pixelDetail[currentResolution].width : 3264,
-        height: currentResolution
-          ? pixelDetail[currentResolution].height
-          : 1840,
+        width: {
+          exact: currentResolution
+            ? pixelDetail[currentResolution].width
+            : 3264,
+        },
+        height: {
+          exact: currentResolution
+            ? pixelDetail[currentResolution].height
+            : 1840,
+        },
       },
     });
     const videoTrack = resUserMedia.getVideoTracks()[0];
