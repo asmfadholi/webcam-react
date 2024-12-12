@@ -203,7 +203,7 @@ export default function Home() {
   };
 
   const handleChangeResolution = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentResolution(e.target.value);
+    setCurrentResolution((e.target.value as PixelString) || null);
     handleCloseDevice();
     handleOpenDevice(facingMode);
   };
