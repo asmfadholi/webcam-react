@@ -2,22 +2,102 @@ import jsPDF from "jspdf";
 import Image from "next/image";
 import { useRef, useState } from "react";
 
+const RESOLUTIONS = [
+  {
+    value: "1mp",
+    label: "1280 x 720 px (1MP)",
+  },
+  {
+    value: "2mp",
+    label: "1920 x 1080 px (2MP)",
+  },
+  {
+    value: "5mp",
+    label: "2592 x 1456 px (5MP)",
+  },
+  {
+    value: "8mp",
+    label: "3264 x 1840 px (8MP)",
+  },
+  {
+    value: "12mp",
+    label: "4000 x 2250 px (12MP)",
+  },
+  {
+    value: "16mp",
+    label: "4608 x 2592 px (16MP)",
+  },
+  {
+    value: "20mp",
+    label: "5344 x 3008 px (20MP)",
+  },
+  {
+    value: "48mp",
+    label: "8000 x 4500 px (48MP)",
+  },
+] as const;
+
+const pixelDetail = {
+  "1mp": {
+    height: 1280,
+    width: 720,
+  },
+  "2mp": {
+    height: 1920,
+    width: 1080,
+  },
+  "5mp": {
+    height: 2592,
+    width: 1456,
+  },
+  "8mp": {
+    height: 3264,
+    width: 1840,
+  },
+  "12mp": {
+    height: 4000,
+    width: 2250,
+  },
+  "16mp": {
+    height: 4608,
+    width: 2592,
+  },
+  "20mp": {
+    height: 5344,
+    width: 3008,
+  },
+  "48mp": {
+    height: 8000,
+    width: 4500,
+  },
+};
+
+const getResolutionList = (input: { maxWidth: number; maxHeight: number }) => {
+  const { maxWidth, maxHeight } = input;
+  const resolutions = [];
+  for (const res of RESOLUTIONS) {
+    const { width, height } = pixelDetail[res.value];
+    if (width <= maxWidth || height <= maxHeight) {
+      resolutions.push(res);
+    }
+  }
+  return resolutions;
+};
+
+type PixelString = keyof typeof pixelDetail;
+
 export default function Home() {
   const [isOpened, setIsOpened] = useState(false);
   const [facingMode, setFacingMode] = useState<"user" | "environment">(
     "environment"
   );
+  const [currentResolution, setCurrentResolution] =
+    useState<PixelString | null>(null);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
   const [currentCapabilities, setCurrentCapabilities] =
     useState<MediaTrackCapabilities | null>(null);
   const refVideo = useRef<HTMLVideoElement>(null);
   const refCanvas = useRef<HTMLCanvasElement>(null);
-
-  const handleCheckResolution = () => {
-    alert(
-      `your max resolution: ${currentCapabilities?.width?.max}x${currentCapabilities?.height?.max}`
-    );
-  };
 
   const handleOpenDevice = async (fMode = facingMode) => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
@@ -27,13 +107,32 @@ export default function Home() {
     const resUserMedia = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: fMode,
-        width: { ideal: 3264 },
-        height: { ideal: 2448 },
+        width: {
+          ideal: currentResolution
+            ? pixelDetail[currentResolution].width
+            : 1840,
+        },
+        height: {
+          ideal: currentResolution
+            ? pixelDetail[currentResolution].height
+            : 3264,
+        },
       },
     });
     const videoTrack = resUserMedia.getVideoTracks()[0];
     const capabilities = videoTrack.getCapabilities();
     setCurrentCapabilities(capabilities);
+    const resolutionList = getResolutionList({
+      maxHeight: capabilities.height?.max || 0,
+      maxWidth: capabilities.width?.max || 0,
+    });
+
+    if (currentResolution === null) {
+      setCurrentResolution(
+        resolutionList?.[resolutionList.length - 1]?.value || "8mp"
+      );
+    }
+
     if (refVideo.current) {
       refVideo.current.srcObject = resUserMedia;
       refVideo.current.playsInline = true;
@@ -101,6 +200,12 @@ export default function Home() {
     setFacingMode(newFMode);
     handleCloseDevice();
     await handleOpenDevice(newFMode);
+  };
+
+  const handleChangeResolution = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCurrentResolution(e.target.value);
+    handleCloseDevice();
+    handleOpenDevice(facingMode);
   };
 
   return (
@@ -282,16 +387,17 @@ export default function Home() {
       )}
       <br />
       {currentCapabilities && (
-        <button
-          id="start-button"
-          onClick={handleCheckResolution}
+        <select
+          name="resolution"
+          value={currentResolution}
+          onChange={handleChangeResolution}
           style={{
             background: "aquamarine",
             padding: "5px",
             borderRadius: "5px",
             marginBottom: "10px",
             width: "200px",
-            height: "50px",
+            height: "40px",
             zIndex: 0,
             position: "fixed",
             top: "0",
@@ -303,8 +409,15 @@ export default function Home() {
             color: "#000",
           }}
         >
-          Check Resolution
-        </button>
+          {getResolutionList({
+            maxHeight: currentCapabilities.height?.max || 0,
+            maxWidth: currentCapabilities.width?.max || 0,
+          }).map((res) => (
+            <option key={res.value} value={res.value}>
+              {res.label}
+            </option>
+          ))}
+        </select>
       )}
     </div>
   );
