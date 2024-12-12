@@ -4,71 +4,55 @@ import { useRef, useState } from "react";
 
 const RESOLUTIONS = [
   {
-    value: "1mp",
-    label: "1280 x 720 px (1MP)",
+    value: "QVGA",
+    label: "320x240 (QVGA)",
   },
   {
-    value: "2mp",
-    label: "1920 x 1080 px (2MP)",
+    value: "VGA",
+    label: "640x480 (VGA)",
   },
   {
-    value: "5mp",
-    label: "2592 x 1456 px (5MP)",
+    value: "HD",
+    label: "1280x720 HD (720p)",
   },
   {
-    value: "8mp",
-    label: "3264 x 1840 px (8MP)",
+    value: "Full_HD",
+    label: "1920x1080 Full HD (1080p)",
   },
   {
-    value: "12mp",
-    label: "4000 x 2250 px (12MP)",
+    value: "2K",
+    label: "2560x1440	(2K)",
   },
   {
-    value: "16mp",
-    label: "4608 x 2592 px (16MP)",
-  },
-  {
-    value: "20mp",
-    label: "5344 x 3008 px (20MP)",
-  },
-  {
-    value: "48mp",
-    label: "8000 x 4500 px (48MP)",
+    value: "4K",
+    label: "3840x2160 (4K)",
   },
 ] as const;
 
 const pixelDetail = {
-  "1mp": {
-    width: 1280,
-    height: 720,
+  QVGA: {
+    width: 240,
+    height: 320,
   },
-  "2mp": {
-    width: 1920,
-    height: 1080,
+  VGA: {
+    width: 480,
+    height: 640,
   },
-  "5mp": {
-    width: 2592,
-    height: 1456,
+  HD: {
+    width: 720,
+    height: 1280,
   },
-  "8mp": {
-    width: 3264,
-    height: 1840,
+  Full_HD: {
+    width: 1080,
+    height: 1920,
   },
-  "12mp": {
-    width: 4000,
-    height: 2250,
+  "2K": {
+    width: 1440,
+    height: 2560,
   },
-  "16mp": {
-    width: 4608,
-    height: 2592,
-  },
-  "20mp": {
-    width: 5344,
-    height: 3008,
-  },
-  "48mp": {
-    width: 8000,
-    height: 4500,
+  "4K": {
+    width: 2160,
+    height: 3840,
   },
 };
 
@@ -77,7 +61,7 @@ const getResolutionList = (input: { maxWidth: number; maxHeight: number }) => {
   const resolutions = [];
   for (const res of RESOLUTIONS) {
     const { width, height } = pixelDetail[res.value];
-    if (width <= maxWidth || height <= maxHeight) {
+    if (width <= maxWidth && height <= maxHeight) {
       resolutions.push(res);
     }
   }
@@ -99,7 +83,10 @@ export default function Home() {
   const refVideo = useRef<HTMLVideoElement>(null);
   const refCanvas = useRef<HTMLCanvasElement>(null);
 
-  const handleOpenDevice = async (fMode = facingMode) => {
+  const handleOpenDevice = async (
+    fMode = facingMode,
+    newResolution = currentResolution
+  ) => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
       alert("devices not supported");
       return false;
@@ -107,10 +94,8 @@ export default function Home() {
     const resUserMedia = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: fMode,
-        width: currentResolution ? pixelDetail[currentResolution].width : 3264,
-        height: currentResolution
-          ? pixelDetail[currentResolution].height
-          : 1840,
+        width: newResolution ? pixelDetail[newResolution].width : 720,
+        height: newResolution ? pixelDetail[newResolution].height : 1280,
       },
     });
     const videoTrack = resUserMedia.getVideoTracks()[0];
@@ -199,9 +184,11 @@ export default function Home() {
   const handleChangeResolution = async (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    setCurrentResolution((e.target.value as PixelString) || null);
+    const newResolution = e.target.value as PixelString;
+    setCurrentResolution(newResolution || null);
     handleCloseDevice();
-    await handleOpenDevice(facingMode);
+
+    await handleOpenDevice(facingMode, newResolution);
   };
 
   return (
