@@ -115,6 +115,7 @@ export default function Home() {
             right: "0",
             left: "0",
             margin: "auto",
+            color: "#000",
           }}
         >
           Start Camera
