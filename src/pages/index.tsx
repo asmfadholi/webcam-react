@@ -42,14 +42,18 @@ export default function Home() {
   };
 
   const handleCloseDevice = async () => {
-    setIsOpened(false);
-    setCurrentCapabilities(null);
     if (!refVideo.current) return;
     const srcObj = refVideo.current.srcObject as MediaStream;
     srcObj?.getTracks().forEach(function (track) {
       track.stop();
     });
     refVideo.current.srcObject = null;
+  };
+
+  const handleCloseCamera = () => {
+    handleCloseDevice();
+    setIsOpened(false);
+    setCurrentCapabilities(null);
   };
 
   const takePicture = () => {
@@ -65,6 +69,8 @@ export default function Home() {
       const data = refCanvas.current.toDataURL("image/png");
       setCurrentImage(data);
     }
+    setIsOpened(false);
+    setCurrentCapabilities(null);
     handleCloseDevice();
   };
 
@@ -199,14 +205,14 @@ export default function Home() {
                 marginBottom: "15px",
                 width: "60px",
                 height: "60px",
-                color: "white",
+                color: "#000",
               }}
             >
               Flip
             </button>
 
             <button
-              onClick={handleCloseDevice}
+              onClick={handleCloseCamera}
               style={{
                 background: "pink",
                 padding: "10px",
@@ -224,7 +230,7 @@ export default function Home() {
                 marginBottom: "15px",
                 width: "60px",
                 height: "60px",
-                color: "white",
+                color: "#000",
               }}
             >
               Close
@@ -267,6 +273,7 @@ export default function Home() {
               padding: "10px",
               borderRadius: "5px",
               marginBottom: "10px",
+              color: "#000",
             }}
           >
             Download
