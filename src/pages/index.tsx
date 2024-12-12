@@ -36,6 +36,7 @@ export default function Home() {
     setCurrentCapabilities(capabilities);
     if (refVideo.current) {
       refVideo.current.srcObject = resUserMedia;
+      refVideo.current.playsInline = true;
       setIsOpened(true);
     }
   };
@@ -131,7 +132,7 @@ export default function Home() {
           id="video"
           ref={refVideo}
           autoPlay
-          playsinline
+          playsInline
           muted
           style={{
             position: "fixed",
