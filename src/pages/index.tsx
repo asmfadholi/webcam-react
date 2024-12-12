@@ -389,7 +389,7 @@ export default function Home() {
       {currentCapabilities && (
         <select
           name="resolution"
-          value={currentResolution}
+          value={currentResolution || ""}
           onChange={handleChangeResolution}
           style={{
             background: "aquamarine",
