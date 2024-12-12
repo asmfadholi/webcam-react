@@ -41,14 +41,14 @@ export default function Home() {
   };
 
   const handleCloseDevice = async () => {
+    setIsOpened(false);
+    setCurrentCapabilities(null);
     if (!refVideo.current) return;
     const srcObj = refVideo.current.srcObject as MediaStream;
     srcObj?.getTracks().forEach(function (track) {
       track.stop();
     });
     refVideo.current.srcObject = null;
-    setIsOpened(false);
-    setCurrentCapabilities(null);
   };
 
   const takePicture = () => {
