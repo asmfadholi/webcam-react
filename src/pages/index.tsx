@@ -39,36 +39,36 @@ const RESOLUTIONS = [
 
 const pixelDetail = {
   "1mp": {
-    height: 1280,
-    width: 720,
+    width: 1280,
+    height: 720,
   },
   "2mp": {
-    height: 1920,
-    width: 1080,
+    width: 1920,
+    height: 1080,
   },
   "5mp": {
-    height: 2592,
-    width: 1456,
+    width: 2592,
+    height: 1456,
   },
   "8mp": {
-    height: 3264,
-    width: 1840,
+    width: 3264,
+    height: 1840,
   },
   "12mp": {
-    height: 4000,
-    width: 2250,
+    width: 4000,
+    height: 2250,
   },
   "16mp": {
-    height: 4608,
-    width: 2592,
+    width: 4608,
+    height: 2592,
   },
   "20mp": {
-    height: 5344,
-    width: 3008,
+    width: 5344,
+    height: 3008,
   },
   "48mp": {
-    height: 8000,
-    width: 4500,
+    width: 8000,
+    height: 4500,
   },
 };
 
