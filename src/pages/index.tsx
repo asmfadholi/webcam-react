@@ -132,6 +132,7 @@ export default function Home() {
           ref={refVideo}
           autoPlay
           playsinline
+          muted
           style={{
             position: "fixed",
             top: 0,
