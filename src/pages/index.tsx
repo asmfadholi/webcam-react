@@ -105,15 +105,9 @@ export default function Home() {
     const videoTrack = resUserMedia.getVideoTracks()[0];
     const capabilities = videoTrack.getCapabilities();
     setCurrentCapabilities(capabilities);
-    const resolutionList = getResolutionList({
-      maxHeight: capabilities.height?.max || 0,
-      maxWidth: capabilities.width?.max || 0,
-    });
 
     if (currentResolution === null) {
-      setCurrentResolution(
-        resolutionList?.[resolutionList.length - 1]?.value || "8mp"
-      );
+      setCurrentResolution("HD");
     }
 
     if (refVideo.current) {
