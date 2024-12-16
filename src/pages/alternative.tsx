@@ -22,17 +22,17 @@ function getDeviceType() {
 
 export default function Alternative() {
   const [currentImage, setCurrentImage] = useState<string | null>(null);
-  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
   const refFileInput = useRef<HTMLInputElement>(null);
+  const refImage = useRef<HTMLImageElement>(null);
 
   const downloadPdf = () => {
-    if (!currentImage || !refFileInput.current || !imageSize.height) return;
+    if (!currentImage || !refFileInput.current || !refImage.current) return;
 
     const doc = new jsPDF();
 
-    const imgWidth = imageSize.width;
-    const imgHeight = imageSize.height;
+    const imgWidth = refImage.current.width;
+    const imgHeight = refImage.current.height;
 
     // Define the maximum size for the image on A4 paper (in mm)
     const a4Width = 210 - 10; // A4 width in mm
@@ -68,21 +68,6 @@ export default function Alternative() {
     refFileInput.current.click();
   };
 
-  const handleRationBase64 = (base64String: string) => {
-    const img = new Image();
-
-    // When the image is loaded, calculate the aspect ratio
-    img.onload = function () {
-      const width = img.width;
-      const height = img.height;
-
-      setImageSize({ width, height });
-    };
-
-    // Set the image source to the base64 string
-    img.src = base64String;
-  };
-
   const handleOnChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -93,7 +78,6 @@ export default function Alternative() {
       const base64String = event?.target?.result;
       if (typeof base64String !== "string") return;
       setCurrentImage(base64String);
-      handleRationBase64(base64String);
     };
 
     reader.readAsDataURL(file);
@@ -152,6 +136,7 @@ export default function Alternative() {
         >
           <p>Result photo:</p>
           <ImageNext
+            ref={refImage}
             src={currentImage}
             alt="result"
             objectFit="contain"
