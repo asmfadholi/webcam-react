@@ -159,10 +159,26 @@ export default function Alternative() {
             Download
           </button>
           <br />
-          <div>
-            image width: {refImage.current?.width} <br />
-            image height: {refImage.current?.height}
-          </div>
+          <button
+            id="start-button"
+            onClick={() => {
+              alert(
+                "Image size: w:" +
+                  refImage.current?.width +
+                  " x:" +
+                  refImage.current?.height
+              );
+            }}
+            style={{
+              background: "aquamarine",
+              padding: "10px",
+              borderRadius: "5px",
+              marginBottom: "10px",
+              color: "#000",
+            }}
+          >
+            Check Size
+          </button>
         </div>
       )}
     </div>
