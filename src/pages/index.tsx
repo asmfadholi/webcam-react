@@ -327,7 +327,7 @@ export default function Home() {
                 id="fileInput"
                 style={{ display: "none" }}
                 accept="image/*"
-                capture="user"
+                // capture="user"
                 onChange={handleOnChangeFile}
               />
 
