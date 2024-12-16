@@ -55,6 +55,7 @@ export default function Alternative() {
       refFileInput.current.click();
       return;
     }
+    refFileInput.current.click();
   };
 
   const handleOnChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
