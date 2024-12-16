@@ -33,6 +33,8 @@ export default function Alternative() {
 
     const imgWidth = refImage.current.width;
     const imgHeight = refImage.current.height;
+    console.log("imgWidth", imgWidth);
+    console.log("imgHeight", imgHeight);
 
     // Define the maximum size for the image on A4 paper (in mm)
     const a4Width = 210 - 10; // A4 width in mm
@@ -156,6 +158,11 @@ export default function Alternative() {
           >
             Download
           </button>
+          <br />
+          <div>
+            image width: {refImage.current?.width} <br />
+            image height: {refImage.current?.height}
+          </div>
         </div>
       )}
     </div>
