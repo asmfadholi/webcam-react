@@ -22,30 +22,39 @@ function getDeviceType() {
 
 export default function Alternative() {
   const [currentImage, setCurrentImage] = useState<string | null>(null);
-  const [ratioImage, setRatioImage] = useState<number | null>(null);
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
   const refFileInput = useRef<HTMLInputElement>(null);
 
   const downloadPdf = () => {
-    if (!currentImage || !refFileInput.current || !ratioImage) return;
-    console.log(currentImage, "currentImage");
+    if (!currentImage || !refFileInput.current || !imageSize.height) return;
 
     const doc = new jsPDF();
-    // Add the base64 image to the PDF
 
-    const A4_WIDTH = 210 - 10;
-    const A4_HEIGHT = 297 - 10;
-    let scaledWidth = A4_WIDTH;
-    let scaledHeight = A4_WIDTH / ratioImage;
+    const imgWidth = imageSize.width;
+    const imgHeight = imageSize.height;
 
-    if (scaledHeight > A4_HEIGHT) {
-      scaledHeight = A4_HEIGHT;
-      scaledWidth = A4_HEIGHT * ratioImage;
+    // Define the maximum size for the image on A4 paper (in mm)
+    const a4Width = 210 - 10; // A4 width in mm
+    const a4Height = 297 - 10; // A4 height in mm
+
+    // Calculate the aspect ratio of the image
+    const aspectRatio = imgWidth / imgHeight;
+
+    // Calculate the width and height that maintain the aspect ratio and fit within A4
+    let width = a4Width;
+    let height = a4Width / aspectRatio;
+
+    // If the height exceeds the A4 height, scale down by height instead
+    if (height > a4Height) {
+      height = a4Height;
+      width = a4Height * aspectRatio;
     }
-    // Parameters: base64 string, 'PNG', x, y, width, height
-    doc.addImage(currentImage, "PNG", 5, 5, scaledWidth, scaledHeight);
 
-    // Save the PDF
+    // Add the image to the PDF
+    doc.addImage(currentImage, "PNG", 5, 5, width, height);
+
+    // Save the generated PDF
     doc.save("image.pdf");
   };
 
@@ -67,10 +76,7 @@ export default function Alternative() {
       const width = img.width;
       const height = img.height;
 
-      // Calculate the aspect ratio
-      const aspectRatio = width / height;
-
-      setRatioImage(aspectRatio);
+      setImageSize({ width, height });
     };
 
     // Set the image source to the base64 string
