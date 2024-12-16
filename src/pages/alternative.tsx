@@ -28,6 +28,16 @@ export default function Alternative() {
 
   const downloadPdf = () => {
     if (!currentImage || !refFileInput.current || !refImage.current) return;
+    const link = document.createElement("a");
+
+    // If the file is a Data URL (Base64-encoded), use the content directly
+    link.href = currentImage;
+    link.download = "image"; // Set the file name for download
+
+    // Trigger a click event to download the file
+    link.click();
+
+    /* if (!currentImage || !refFileInput.current || !refImage.current) return;
 
     const doc = new jsPDF();
 
@@ -57,7 +67,7 @@ export default function Alternative() {
     doc.addImage(currentImage, "PNG", 5, 5, width, height);
 
     // Save the generated PDF
-    doc.save("image.pdf");
+    doc.save("image.pdf"); */
   };
 
   const handleOpenGallery = () => {
@@ -157,27 +167,6 @@ export default function Alternative() {
             }}
           >
             Download
-          </button>
-          <br />
-          <button
-            id="start-button"
-            onClick={() => {
-              alert(
-                "Image size: w:" +
-                  refImage.current?.width +
-                  " x:" +
-                  refImage.current?.height
-              );
-            }}
-            style={{
-              background: "aquamarine",
-              padding: "10px",
-              borderRadius: "5px",
-              marginBottom: "10px",
-              color: "#000",
-            }}
-          >
-            Check Size
           </button>
         </div>
       )}
