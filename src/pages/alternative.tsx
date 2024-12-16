@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import Image from "next/image";
+import ImageNext from "next/image";
 import { useRef, useState } from "react";
 
 function getDeviceType() {
@@ -22,24 +22,25 @@ function getDeviceType() {
 
 export default function Alternative() {
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [ratioImage, setRatioImage] = useState<number | null>(null);
 
   const refFileInput = useRef<HTMLInputElement>(null);
 
   const downloadPdf = () => {
-    if (!currentImage || !refFileInput.current) return;
+    if (!currentImage || !refFileInput.current || !ratioImage) return;
+    console.log(currentImage, "currentImage");
 
     const doc = new jsPDF();
     // Add the base64 image to the PDF
-    const aspectRatio =
-      refFileInput.current.width / refFileInput.current.height;
+
     const A4_WIDTH = 210 - 10;
     const A4_HEIGHT = 297 - 10;
     let scaledWidth = A4_WIDTH;
-    let scaledHeight = A4_WIDTH / aspectRatio;
+    let scaledHeight = A4_WIDTH / ratioImage;
 
     if (scaledHeight > A4_HEIGHT) {
       scaledHeight = A4_HEIGHT;
-      scaledWidth = A4_HEIGHT * aspectRatio;
+      scaledWidth = A4_HEIGHT * ratioImage;
     }
     // Parameters: base64 string, 'PNG', x, y, width, height
     doc.addImage(currentImage, "PNG", 5, 5, scaledWidth, scaledHeight);
@@ -58,9 +59,26 @@ export default function Alternative() {
     refFileInput.current.click();
   };
 
+  const handleRationBase64 = (base64String: string) => {
+    const img = new Image();
+
+    // When the image is loaded, calculate the aspect ratio
+    img.onload = function () {
+      const width = img.width;
+      const height = img.height;
+
+      // Calculate the aspect ratio
+      const aspectRatio = width / height;
+
+      setRatioImage(aspectRatio);
+    };
+
+    // Set the image source to the base64 string
+    img.src = base64String;
+  };
+
   const handleOnChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (!file) return;
 
     const reader = new FileReader();
@@ -69,6 +87,7 @@ export default function Alternative() {
       const base64String = event?.target?.result;
       if (typeof base64String !== "string") return;
       setCurrentImage(base64String);
+      handleRationBase64(base64String);
     };
 
     reader.readAsDataURL(file);
@@ -126,7 +145,7 @@ export default function Alternative() {
           }}
         >
           <p>Result photo:</p>
-          <Image
+          <ImageNext
             src={currentImage}
             alt="result"
             objectFit="contain"
