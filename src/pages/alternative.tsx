@@ -104,7 +104,7 @@ export default function Alternative() {
         id="fileInput"
         style={{ display: "none" }}
         accept="image/*"
-        capture="user"
+        capture="environment"
         onChange={handleOnChangeFile}
       />
 
