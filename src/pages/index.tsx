@@ -82,6 +82,7 @@ export default function Home() {
     useState<MediaTrackCapabilities | null>(null);
   const refVideo = useRef<HTMLVideoElement>(null);
   const refCanvas = useRef<HTMLCanvasElement>(null);
+  const refFileInput = useRef<HTMLInputElement>(null);
 
   const handleOpenDevice = async (
     fMode = facingMode,
@@ -189,6 +190,28 @@ export default function Home() {
     await handleOpenDevice(facingMode, newResolution);
   };
 
+  const handleOpenGallery = () => {
+    if (!refFileInput.current) return;
+    refFileInput.current.click();
+  };
+
+  const handleOnChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      const base64String = event?.target?.result;
+      if (typeof base64String !== "string") return;
+      setCurrentImage(base64String);
+      handleCloseCamera();
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div>
       {!isOpened && (
@@ -234,12 +257,12 @@ export default function Home() {
             height: "100vh",
             pointerEvents: "none",
             // @ts-expect-error: vendor prefix
-            "&::-webkit-media-controls": {
+            "&::WebkitMediaControls": {
               display:
                 "none !important" /* Webkit-based browsers (Chrome, Safari) */,
             },
 
-            "&::-moz-media-controls": {
+            "&::MozMediaControls": {
               display: "none !important" /* Firefox */,
             },
           }}
@@ -289,7 +312,7 @@ export default function Home() {
                 outline: "none",
                 cursor: "pointer",
                 marginBottom: "15px",
-                width: "60px",
+                width: "80px",
                 height: "60px",
                 color: "#000",
               }}
@@ -297,29 +320,65 @@ export default function Home() {
               Flip
             </button>
 
+            <div>
+              <input
+                ref={refFileInput}
+                type="file"
+                id="fileInput"
+                style={{ display: "none" }}
+                accept="image/*"
+                onChange={handleOnChangeFile}
+              />
+
+              <button
+                onClick={handleOpenGallery}
+                style={{
+                  background: "pink",
+                  padding: "10px",
+                  borderRadius: "5px",
+                  zIndex: 3,
+                  transition: "150ms",
+                  position: "fixed",
+                  top: "0",
+                  bottom: "0",
+                  right: "200px",
+                  left: "0",
+                  margin: "auto",
+                  outline: "none",
+                  cursor: "pointer",
+                  marginBottom: "15px",
+                  width: "80px",
+                  height: "60px",
+                  color: "#000",
+                }}
+              >
+                Gallery
+              </button>
+            </div>
+
             <button
               onClick={handleCloseCamera}
               style={{
-                background: "pink",
-                padding: "10px",
+                background: "red",
                 borderRadius: "5px",
                 zIndex: 3,
                 transition: "150ms",
                 position: "fixed",
                 top: "0",
                 bottom: "0",
-                right: "200px",
-                left: "0",
+                right: "0",
+                left: "300px",
                 margin: "auto",
                 outline: "none",
                 cursor: "pointer",
-                marginBottom: "15px",
-                width: "60px",
-                height: "60px",
-                color: "#000",
+                marginTop: "20px",
+                width: "30px",
+                height: "30px",
+                color: "#fff",
+                textAlign: "center",
               }}
             >
-              Close
+              x
             </button>
           </>
         )}
