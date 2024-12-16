@@ -1,4 +1,4 @@
-import jsPDF from "jspdf";
+// import jsPDF from "jspdf";
 import ImageNext from "next/image";
 import { useRef, useState } from "react";
 
