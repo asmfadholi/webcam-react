@@ -124,7 +124,7 @@ export default function Alternative() {
         type="file"
         id="fileInput"
         style={{ display: "none" }}
-        accept="image/*"
+        accept="*/*"
         onChange={handleOnChangeFile}
       />
 
