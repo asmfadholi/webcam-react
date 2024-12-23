@@ -94,9 +94,7 @@ export default function DebugDownload() {
       >
         Download with Blob
       </button>
-
       <br />
-
       <button
         style={{
           background: "aquamarine",
@@ -109,9 +107,9 @@ export default function DebugDownload() {
       >
         Download with Base64
       </button>
-
       <br />
-
+      Solution:
+      <br />
       <button
         style={{
           background: "aquamarine",
