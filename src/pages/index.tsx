@@ -424,6 +424,18 @@ export default function Home() {
           >
             Download
           </button>
+          <button
+            style={{
+              background: "aquamarine",
+              padding: "10px",
+              borderRadius: "5px",
+              marginBottom: "10px",
+              color: "#000",
+            }}
+            onClick={() => alert(currentImage)}
+          >
+            Check image
+          </button>
         </div>
       )}
       <br />
