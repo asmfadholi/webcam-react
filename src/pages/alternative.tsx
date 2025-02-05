@@ -22,6 +22,7 @@ function getDeviceType() {
 
 export default function Alternative() {
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [imageUploaded, setImageUploaded] = useState<File | null>(null);
 
   const refFileInput = useRef<HTMLInputElement>(null);
   const refImage = useRef<HTMLImageElement>(null);
@@ -83,7 +84,7 @@ export default function Alternative() {
   const handleOnChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
+    setImageUploaded(file);
     const reader = new FileReader();
 
     reader.onload = function (event) {
@@ -168,6 +169,8 @@ export default function Alternative() {
           >
             Download
           </button>
+
+          <div>format: {imageUploaded?.type}</div>
         </div>
       )}
     </div>
