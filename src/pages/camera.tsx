@@ -16,9 +16,7 @@ export default function CameraCapture() {
     <div style={{ textAlign: "center", padding: "20px" }}>
       <input
         type="file"
-        accept={showCamera ? "image/*" : ".jpg,.jpeg,.png,.gif"}
-        // @ts-expect-error: fix error ater
-        capture="filesystem"
+        accept={showCamera ? "image/*" : ".txt,.pdf"}
         onChange={handleCapture}
         style={{ display: "block", margin: "10px auto" }}
       />
