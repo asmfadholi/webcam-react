@@ -15,7 +15,7 @@ export default function CameraCapture() {
     <div style={{ textAlign: "center", padding: "20px" }}>
       <input
         type="file"
-        accept="image/*"
+        accept=".jpg,.jpeg,.png,.gif"
         onChange={handleCapture}
         style={{ display: "block", margin: "10px auto" }}
       />
