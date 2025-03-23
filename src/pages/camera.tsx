@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react";
 
 export default function CameraCapture() {
   const [image, setImage] = useState<string | null>(null);
+  const [showCamera, setShowCamera] = useState<boolean>(false);
 
   const handleCapture = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event?.target?.files?.[0];
@@ -15,10 +16,14 @@ export default function CameraCapture() {
     <div style={{ textAlign: "center", padding: "20px" }}>
       <input
         type="file"
-        accept=".jpg,.jpeg,.png,.gif"
+        accept={showCamera ? "image/*" : ".jpg,.jpeg,.png,.gif"}
+        // @ts-expect-error: fix error ater
+        capture="filesystem"
         onChange={handleCapture}
         style={{ display: "block", margin: "10px auto" }}
       />
+      <button onClick={() => setShowCamera((prev) => !prev)}>change it</button>
+      <div>isshowCamera: {showCamera ? "true" : "false"}</div>
       {image && (
         <img
           src={image}
