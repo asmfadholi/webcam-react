@@ -2,7 +2,6 @@ import { ChangeEvent, useState } from "react";
 
 export default function CameraCapture() {
   const [image, setImage] = useState<string | null>(null);
-  const [showCamera, setShowCamera] = useState<boolean>(false);
 
   const handleCapture = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event?.target?.files?.[0];
