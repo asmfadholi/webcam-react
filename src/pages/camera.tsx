@@ -34,6 +34,8 @@ export default function CameraCapture() {
         />
       </div>
 
+      <br />
+
       <div>
         <h3>.jpg, .jpeg, .png, .heic, .heif, .pdf</h3>
         <input
@@ -43,6 +45,8 @@ export default function CameraCapture() {
           style={{ display: "block", margin: "10px auto" }}
         />
       </div>
+
+      <br />
 
       <div>
         <h3>.jpg, .jpeg, .png, .heic, .heif, .pdf, capture=false</h3>
@@ -55,6 +59,8 @@ export default function CameraCapture() {
         />
       </div>
 
+      <br />
+
       <div>
         <h3>.jpg, .jpeg, .png, .heic, .heif, .pdf, capture=environment</h3>
         <input
@@ -66,12 +72,26 @@ export default function CameraCapture() {
         />
       </div>
 
+      <br />
+
       <div>
         <h3>.jpg, .jpeg, .png, .heic, .heif, .pdf, capture=user</h3>
         <input
           type="file"
           accept=".jpg, .jpeg, .png, .heic, .heif, .pdf"
           capture="user"
+          onChange={handleCapture}
+          style={{ display: "block", margin: "10px auto" }}
+        />
+      </div>
+
+      <br />
+
+      <div>
+        <h3>.pdf</h3>
+        <input
+          type="file"
+          accept=".pdf"
           onChange={handleCapture}
           style={{ display: "block", margin: "10px auto" }}
         />
