@@ -14,21 +14,36 @@ export default function CameraCapture() {
 
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
-      <input
-        type="file"
-        accept={showCamera ? "image/*" : ".txt,.pdf"}
-        onChange={handleCapture}
-        style={{ display: "block", margin: "10px auto" }}
-      />
-      <button onClick={() => setShowCamera((prev) => !prev)}>change it</button>
-      <div>isshowCamera: {showCamera ? "true" : "false"}</div>
-      {image && (
-        <img
-          src={image}
-          alt="Captured"
-          style={{ maxWidth: "100%", marginTop: "10px" }}
+      <div>
+        <h3>image/*, .pdf</h3>
+        <input
+          type="file"
+          accept="image/*, .pdf"
+          onChange={handleCapture}
+          style={{ display: "block", margin: "10px auto" }}
         />
-      )}
+      </div>
+      <br />
+      <div>
+        <h3>image/*, .pdf, capture=false</h3>
+        <input
+          type="file"
+          accept="image/*, .pdf"
+          capture={false}
+          onChange={handleCapture}
+          style={{ display: "block", margin: "10px auto" }}
+        />
+      </div>
+
+      <div>
+        {image && (
+          <img
+            src={image}
+            alt="Captured"
+            style={{ maxWidth: "100%", marginTop: "10px" }}
+          />
+        )}
+      </div>
     </div>
   );
 }
