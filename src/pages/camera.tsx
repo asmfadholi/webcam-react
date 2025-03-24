@@ -97,6 +97,24 @@ export default function CameraCapture() {
         />
       </div>
 
+      <br />
+
+      <div>
+        <button
+          onClick={() => {
+            document.getElementById("fileInput")?.click();
+          }}
+        >
+          Upload Image
+        </button>
+        <input
+          type="file"
+          id="fileInput"
+          accept=".jpg,.jpeg,.png,.heic,.heif,.pdf"
+          style={{ display: "none" }}
+        />
+      </div>
+
       <div>
         {image && (
           <img
