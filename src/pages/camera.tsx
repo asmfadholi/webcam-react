@@ -18,6 +18,9 @@ export default function CameraCapture() {
         <input
           type="file"
           accept="image/*, .pdf"
+          onClick={(e) => {
+            e.currentTarget.capture = "";
+          }}
           onChange={handleCapture}
           style={{ display: "block", margin: "10px auto" }}
         />
@@ -29,6 +32,10 @@ export default function CameraCapture() {
           type="file"
           accept="image/*, .pdf"
           capture={false}
+          onClick={(e) => {
+            // @ts-expect-error: adasd
+            e.currentTarget.capture = null;
+          }}
           onChange={handleCapture}
           style={{ display: "block", margin: "10px auto" }}
         />
