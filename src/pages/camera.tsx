@@ -18,9 +18,6 @@ export default function CameraCapture() {
         <input
           type="file"
           accept="image/*, .pdf"
-          onClick={(e) => {
-            e.currentTarget.capture = "";
-          }}
           onChange={handleCapture}
           style={{ display: "block", margin: "10px auto" }}
         />
@@ -32,10 +29,6 @@ export default function CameraCapture() {
           type="file"
           accept="image/*, .pdf"
           capture={false}
-          onClick={(e) => {
-            // @ts-expect-error: adasd
-            e.currentTarget.capture = null;
-          }}
           onChange={handleCapture}
           style={{ display: "block", margin: "10px auto" }}
         />
@@ -95,32 +88,16 @@ export default function CameraCapture() {
       <br />
 
       <div>
-        <h3>.pdf</h3>
+        <h3>.pdf, .doc, .docx, .xls, .xlsx, .txt, .csv</h3>
         <input
           type="file"
-          accept=".pdf"
+          accept=".pdf, .doc, .docx, .xls, .xlsx, .txt, .csv"
           onChange={handleCapture}
           style={{ display: "block", margin: "10px auto" }}
         />
       </div>
 
       <br />
-
-      <div>
-        <button
-          onClick={() => {
-            document.getElementById("fileInput")?.click();
-          }}
-        >
-          Upload Image
-        </button>
-        <input
-          type="file"
-          id="fileInput"
-          accept=".jpg,.jpeg,.png,.heic,.heif,.pdf"
-          style={{ display: "none" }}
-        />
-      </div>
 
       <div>
         {image && (
