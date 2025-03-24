@@ -35,6 +35,49 @@ export default function CameraCapture() {
       </div>
 
       <div>
+        <h3>.jpg, .jpeg, .png, .heic, .heif, .pdf</h3>
+        <input
+          type="file"
+          accept=".jpg, .jpeg, .png, .heic, .heif, .pdf"
+          onChange={handleCapture}
+          style={{ display: "block", margin: "10px auto" }}
+        />
+      </div>
+
+      <div>
+        <h3>.jpg, .jpeg, .png, .heic, .heif, .pdf, capture=false</h3>
+        <input
+          type="file"
+          accept=".jpg, .jpeg, .png, .heic, .heif, .pdf"
+          capture={false}
+          onChange={handleCapture}
+          style={{ display: "block", margin: "10px auto" }}
+        />
+      </div>
+
+      <div>
+        <h3>.jpg, .jpeg, .png, .heic, .heif, .pdf, capture=environment</h3>
+        <input
+          type="file"
+          accept=".jpg, .jpeg, .png, .heic, .heif, .pdf"
+          capture="environment"
+          onChange={handleCapture}
+          style={{ display: "block", margin: "10px auto" }}
+        />
+      </div>
+
+      <div>
+        <h3>.jpg, .jpeg, .png, .heic, .heif, .pdf, capture=user</h3>
+        <input
+          type="file"
+          accept=".jpg, .jpeg, .png, .heic, .heif, .pdf"
+          capture="user"
+          onChange={handleCapture}
+          style={{ display: "block", margin: "10px auto" }}
+        />
+      </div>
+
+      <div>
         {image && (
           <img
             src={image}
