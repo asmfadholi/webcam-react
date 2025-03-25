@@ -97,6 +97,16 @@ export default function CameraCapture() {
         />
       </div>
 
+      <div>
+        <h3>application/pdf,text/plain</h3>
+        <input
+          type="file"
+          accept="application/pdf,text/plain"
+          onChange={handleCapture}
+          style={{ display: "block", margin: "10px auto" }}
+        />
+      </div>
+
       <br />
 
       <div>
