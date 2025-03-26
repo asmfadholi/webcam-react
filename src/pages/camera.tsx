@@ -120,11 +120,11 @@ export default function CameraCapture() {
       <br />
 
       <div>
-        <h3>image/*,application/pdf, webkitdirectory</h3>
+        <h3>image/*,application/pdf, capture=filesystem</h3>
         <input
           type="file"
           // @ts-expect-error: test
-          webkitdirectory
+          capture="filesystem"
           accept="image/*,application/pdf"
           onChange={handleCapture}
           style={{ display: "block", margin: "10px auto" }}
