@@ -111,7 +111,7 @@ export default function CameraCapture() {
         <h3>image/png,image/jpeg,image/gif</h3>
         <input
           type="file"
-          accept="image/png,image/jpeg,image/gif"
+          accept="image/*"
           onChange={handleCapture}
           style={{ display: "block", margin: "10px auto" }}
         />
